@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Portfolio Detail - Dragonfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .df-detail-hero {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, rgba(26, 71, 42, 0.1), rgba(15, 18, 20, 0.8));
+            border-bottom: 2px solid var(--emerald);
+        }
+        .df-detail-hero h1 {
+            font-size: 2.5rem;
+            color: var(--emerald);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+        .df-detail-hero p {
+            font-size: 1.1rem;
+            color: var(--silver);
+            opacity: 0.9;
+        }
+        .df-video-container {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        .df-video-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, var(--main-green), var(--ink-black));
+            border-radius: 20px;
+            border: 3px solid var(--emerald);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 50px rgba(46, 204, 113, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .df-video-player:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5), 0 0 60px rgba(46, 204, 113, 0.4);
+        }
+        .df-video-placeholder {
+            text-align: center;
+            color: var(--emerald);
+        }
+        .df-video-placeholder .play-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+        .df-video-placeholder .play-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .df-video-info {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        .df-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        .df-info-card {
+            background: rgba(26, 71, 42, 0.1);
+            border: 2px solid var(--emerald);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        .df-info-card:hover {
+            background: rgba(26, 71, 42, 0.2);
+            transform: translateY(-5px);
+        }
+        .df-info-card h3 {
+            color: var(--lime);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .df-info-card p {
+            color: var(--silver);
+            line-height: 1.6;
+        }
+        .df-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .df-tag {
+            background: linear-gradient(135deg, var(--emerald), var(--main-green));
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .df-back-btn {
+            position: fixed;
+            top: 100px;
+            left: 2rem;
+            z-index: 1000;
+        }
+        .df-dragon-eye {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--lime) 20%, var(--emerald) 40%, var(--main-green) 80%);
+            border-radius: 50%;
+            border: 3px solid var(--silver);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        .df-dragon-eye::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background: var(--ink-black);
+            border-radius: 50%;
+        }
+        .df-video-player:hover .df-dragon-eye {
+            opacity: 1;
+            animation: eyeBlink 3s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        @keyframes eyeBlink {
+            0%, 90%, 100% { transform: translate(-50%, -50%) scaleY(1); }
+            95% { transform: translate(-50%, -50%) scaleY(0.1); }
+        }
+        @media (max-width: 768px) {
+            .df-detail-hero h1 { font-size: 2rem; }
+            .df-info-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .df-back-btn { position: static; margin: 2rem auto; display: block; width: fit-content; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dragonfolio">
+        <header class="df-header">
+            <div class="df-header-inner">
+                <a class="df-brand" href="index.html">🐉 Dragonfolio</a>
+                <nav class="df-nav">
+                    <a href="index.html">Home</a>
+                    <a href="portfolio.html">Portfolio</a>
+                    <a href="guestbook.html">Guestbook</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="admin.html">Admin</a>
+                </nav>
+            </div>
+        </header>
+
+        <button class="df-btn df-secondary df-back-btn" onclick="history.back()">← Back</button>
+
+        <section class="df-detail-hero">
+            <h1 id="portfolioTitle">Portfolio Title</h1>
+            <p id="portfolioDesc">Portfolio Description</p>
+        </section>
+
+        <section class="df-section">
+            <div class="df-video-container">
+                <div class="df-video-player" id="videoPlayer">
+                    <div class="df-video-placeholder">
+                        <div class="play-icon">▶</div>
+                        <div class="play-text">Click to experience the dragon's magic</div>
+                    </div>
+                    <div class="df-dragon-eye"></div>
+                </div>
+            </div>
+
+            <div class="df-video-info">
+                <div class="df-info-grid">
+                    <div class="df-info-card">
+                        <h3>🎬 Project Information</h3>
+                        <p id="projectInfo">
+                            This project showcases advanced 3D animation techniques using Maya. 
+                            Experience the mysterious atmosphere of Slytherin and the dynamic movements of dragons.
+                        </p>
+                        <div class="df-tags">
+                            <span class="df-tag">Maya</span>
+                            <span class="df-tag">3D Animation</span>
+                            <span class="df-tag">VFX</span>
+                        </div>
+                    </div>
+
+                    <div class="df-info-card">
+                        <h3>🐉 Production Process</h3>
+                        <p id="processInfo">
+                            From modeling to rigging, animation, and rendering - every step was crafted to completion. 
+                            Special focus was placed on natural dragon movements and magical effects.
+                        </p>
+                        <div class="df-tags">
+                            <span class="df-tag">Modeling</span>
+                            <span class="df-tag">Rigging</span>
+                            <span class="df-tag">Rendering</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const portfolioId = urlParams.get('id');
+        const portfolioData = {};
+
+        function loadPortfolioData() {
+            const data = portfolioData[portfolioId];
+            if (data) {
+                document.getElementById('portfolioTitle').textContent = data.title;
+                document.getElementById('portfolioDesc').textContent = data.description;
+                document.getElementById('projectInfo').textContent = data.info;
+                document.getElementById('processInfo').textContent = data.process;
+                
+                const tagContainers = document.querySelectorAll('.df-tags');
+                tagContainers.forEach((container, index) => {
+                    container.innerHTML = data.tags.map(tag => 
+                        `<span class="df-tag">${tag}</span>`
+                    ).join('');
+                });
+            } else {
+                document.getElementById('portfolioTitle').textContent = 'Portfolio Not Found';
+                document.getElementById('portfolioDesc').textContent = 'The requested portfolio item does not exist.';
+            }
+        }
+
+        document.getElementById('videoPlayer').addEventListener('click', function() {
+            const placeholder = this.querySelector('.df-video-placeholder');
+            
+            placeholder.innerHTML = `
+                <div style="color: var(--emerald); text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
+                    <div style="font-size: 1.2rem;">Video is playing</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.7;">
+                        (In production, the uploaded mp4 file would play here)
+                    </div>
+                </div>
+            `;
+            
+            this.style.background = 'linear-gradient(135deg, var(--emerald), var(--main-green))';
+            
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.textContent = '✨';
+                    sparkle.style.cssText = `
+                        position: absolute;
+                        top: ${Math.random() * 100}%;
+                        left: ${Math.random() * 100}%;
+                        font-size: 1.5rem;
+                        pointer-events: none;
+                        z-index: 10;
+                        animation: sparkle 2s ease-out forwards;
+                    `;
+                    this.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 100);
+            }
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes sparkle {
+                0% { opacity: 1; transform: scale(1); }
+                100% { opacity: 0; transform: scale(0) translateY(-30px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.addEventListener('DOMContentLoaded', loadPortfolioData);
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Portfolio - Dragonfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dragonfolio">
+        <header class="df-header">
+            <div class="df-header-inner">
+                <a class="df-brand" href="index.html">🐉 Dragonfolio</a>
+                <nav class="df-nav">
+                    <a href="index.html">Home</a>
+                    <a href="portfolio.html">Portfolio</a>
+                    <a href="guestbook.html">Guestbook</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="admin.html">Admin</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="df-section">
+            <h1>🎨 Portfolio Gallery</h1>
+            <p style="text-align:center; color:var(--silver); margin-bottom:40px;">
+                Hover over each card to experience Slytherin color reveal and dragon eye effects
+            </p>
+            
+            <div class="df-grid" id="portfolioGrid">
+                <div style="grid-column: span 12; text-align: center; color: var(--silver); opacity: 0.7; margin: 3rem 0;">
+                    <p>No portfolio items to display yet.</p>
+                    <p>Upload your first video through the Admin panel to see it here.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        class PortfolioGallery {
+            constructor() {
+                this.portfolioData = [];
+                this.init();
+            }
+
+            init() {
+                this.loadPortfolioData();
+                this.renderPortfolio();
+            }
+
+            loadPortfolioData() {
+                this.portfolioData = [];
+            }
+
+            renderPortfolio() {
+                const grid = document.getElementById('portfolioGrid');
+                
+                if (this.portfolioData.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: span 12; text-align: center; color: var(--silver); opacity: 0.7; margin: 3rem 0;">
+                            <p>No portfolio items to display yet.</p>
+                            <p>Upload your first video through the Admin panel to see it here.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = '';
+                
+                this.portfolioData.forEach((item, index) => {
+                    const article = document.createElement('article');
+                    article.className = this.getCardClasses(index);
+                    
+                    article.innerHTML = `
+                        <div class="df-label">${item.category || 'Project'}</div>
+                        <div class="df-media" style="background-image: url('${item.thumbnail || ''}')"></div>
+                        <div class="df-title">${item.title}</div>
+                        ${item.featured ? '<div class="df-eye-overlay"><div class="df-dragon-eye"></div></div>' : ''}
+                    `;
+
+                    article.addEventListener('click', () => {
+                        if (item.featured) {
+                            window.location.href = `portfolio-detail.html?id=${item.id}`;
+                        } else {
+                            alert(`${item.title} - Video playback`);
+                        }
+                    });
+
+                    grid.appendChild(article);
+                });
+            }
+
+            getCardClasses(index) {
+                const baseClasses = 'df-card df-reveal';
+                
+                if (index < 2) {
+                    return `${baseClasses} df-span-6 df-eye`;
+                }
+                
+                const hasEye = Math.random() > 0.5;
+                return `${baseClasses} df-span-4 ${hasEye ? 'df-eye' : ''}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new PortfolioGallery();
+        });
+    </script>
+</body>
+</html>

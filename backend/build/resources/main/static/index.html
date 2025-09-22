@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐉 Dragonfolio - Slytherin's Secret & Toothless Breath</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .df-hero {
+            text-align: center;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .df-hero h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--emerald);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .df-hero p {
+            font-size: 1.2rem;
+            color: var(--silver);
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .df-nest-title {
+            text-align: center;
+            font-size: 2rem;
+            font-family: 'UnifrakturMaguntia', serif;
+            color: var(--emerald);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .df-nest-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--lime), transparent);
+        }
+
+        .df-eggs-container {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin: 3rem auto;
+            max-width: 1000px;
+            flex-wrap: wrap;
+        }
+
+        .df-admin-eggs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .df-egg-svg {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .df-egg-svg:hover {
+            transform: scale(1.1);
+        }
+
+        .df-admin-egg {
+            position: relative;
+            width: 120px;
+            height: 150px;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        .df-admin-egg.df-crack .df-shell-top {
+            animation: crackTop 0.5s ease-out forwards;
+        }
+
+        .df-admin-egg.df-crack .df-shell-bottom {
+            animation: crackBottom 0.5s ease-out forwards;
+        }
+
+        .df-admin-egg .df-egg-reveal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--emerald), var(--main-green));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .df-admin-egg.df-crack .df-egg-reveal {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .df-video-mock {
+            color: white;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 0.5rem;
+            font-weight: 600;
+        }
+
+        @keyframes crackTop {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-20px) rotate(-15deg); opacity: 0; }
+        }
+
+        @keyframes crackBottom {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(20px) rotate(15deg); opacity: 0; }
+        }
+
+        .df-egg {
+            width: 200px;
+            height: 250px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .df-egg:hover {
+            transform: scale(1.05);
+        }
+
+        .df-egg-shell {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--emerald) 0%, var(--main-green) 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            border: 3px solid var(--silver);
+            box-shadow: 
+                0 0 30px rgba(46, 204, 113, 0.3),
+                inset 0 0 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.6s ease;
+        }
+
+        .df-egg-shell::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 30%;
+            background: linear-gradient(135deg, rgba(166, 255, 158, 0.3) 0%, transparent 100%);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        .df-egg-crack {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(45deg, transparent 40%, var(--ink-black) 42%, var(--ink-black) 45%, transparent 47%),
+                linear-gradient(-30deg, transparent 30%, var(--ink-black) 32%, var(--ink-black) 35%, transparent 37%),
+                linear-gradient(60deg, transparent 60%, var(--ink-black) 62%, var(--ink-black) 65%, transparent 67%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .df-egg.cracking .df-egg-crack {
+            opacity: 1;
+        }
+
+        .df-egg.cracking .df-egg-shell {
+            animation: eggShake 0.6s ease-in-out;
+        }
+
+        .df-egg-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            height: 85%;
+            background: linear-gradient(135deg, var(--ink-black), rgba(26, 71, 42, 0.8));
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.2);
+            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 2px solid var(--emerald);
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .df-egg.hatched .df-egg-shell {
+            opacity: 0;
+            transform: scale(0.1);
+        }
+
+        .df-egg.hatched .df-egg-content {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .df-video-preview {
+            width: 80%;
+            height: 50%;
+            background: linear-gradient(135deg, var(--main-green), var(--emerald));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .df-video-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        .df-egg-title {
+            color: var(--emerald);
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .df-egg-desc {
+            color: var(--silver);
+            font-size: 0.8rem;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .df-sorting-hat {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 18, 20, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .df-sorting-hat.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .df-hat-card {
+            background: linear-gradient(135deg, var(--main-green), var(--ink-black));
+            border: 2px solid var(--emerald);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 0 50px rgba(46, 204, 113, 0.5);
+        }
+
+        .df-hat-title {
+            font-size: 2rem;
+            color: var(--lime);
+            margin-bottom: 1rem;
+        }
+
+        .df-hat-desc {
+            color: var(--silver);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .df-dragon-breath {
+            position: absolute;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .df-breath-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--lime);
+            border-radius: 50%;
+            animation: breathFloat 2s ease-out forwards;
+            box-shadow: 0 0 10px var(--lime);
+        }
+
+        @keyframes eggShake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-2deg); }
+            75% { transform: rotate(2deg); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        @keyframes breathFloat {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) translateY(-80px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .df-hero h1 {
+                font-size: 2rem;
+            }
+
+            .df-eggs-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+            }
+
+            .df-egg {
+                width: 180px;
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dragonfolio">
+        <header class="df-header">
+            <div class="df-header-inner">
+                <a class="df-brand" href="index.html">🐉 Dragonfolio</a>
+                <nav class="df-nav">
+                    <a href="index.html">Home</a>
+                    <a href="portfolio.html">Portfolio</a>
+                    <a href="guestbook.html">Guestbook</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="admin.html">Admin</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="df-hero">
+            <h1>Dragon's Nest</h1>
+            <p>A magical portfolio showcasing Slytherin's secrets and Toothless's breath</p>
+        </section>
+
+        <section class="df-section">
+            <h2 class="df-nest-title">🥚 Click the Dragon Eggs</h2>
+            <div class="df-eggs-container" id="eggsContainer">
+                <!-- Eggs will be dynamically generated -->
+            </div>
+            
+            <!-- Admin Dragon Nest (Hidden) -->
+            <div class="df-admin-eggs" id="adminEggs" style="display: none;">
+                <h3 style="text-align: center; color: var(--emerald); margin: 2rem 0;">🐣 Admin Dragon Nest</h3>
+                <!-- Admin eggs will be dynamically generated -->
+            </div>
+        </section>
+
+        <!-- Sorting Hat Modal -->
+        <div class="df-sorting-hat" id="sortingHat">
+            <div class="df-hat-card">
+                <h2 class="df-hat-title">⚡ Sorting Hat Ceremony ⚡</h2>
+                <p class="df-hat-desc" id="hatDesc">Which house will you be sorted into...?</p>
+                <button class="df-btn" id="hatStart">Put on the Hat 🎩</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const portfolioData = [];
+
+        class DragonNest {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.createEggs();
+                this.setupSortingHat();
+                this.addDragonBreathEffect();
+                this.createAdminEggs();
+            }
+
+            createEggs() {
+                const container = document.getElementById('eggsContainer');
+                
+                if (portfolioData.length === 0) {
+                    const emptyMessage = document.createElement('div');
+                    emptyMessage.style.cssText = `
+                        text-align: center;
+                        color: var(--silver);
+                        opacity: 0.7;
+                        font-size: 1.1rem;
+                        margin: 3rem 0;
+                    `;
+                    emptyMessage.textContent = 'No portfolio items yet. Upload your first video through Admin panel.';
+                    container.appendChild(emptyMessage);
+                    return;
+                }
+
+                portfolioData.forEach((item, index) => {
+                    const egg = document.createElement('div');
+                    egg.className = 'df-egg';
+                    egg.innerHTML = `
+                        <div class="df-egg-shell">
+                            <div class="df-egg-crack"></div>
+                        </div>
+                        <div class="df-egg-content">
+                            <div class="df-video-preview">▶</div>
+                            <div class="df-egg-title">${item.title}</div>
+                            <div class="df-egg-desc">${item.description}</div>
+                        </div>
+                    `;
+
+                    egg.addEventListener('click', () => this.hatchEgg(egg, item));
+                    egg.addEventListener('mouseenter', () => this.breathEffect(egg));
+                    
+                    container.appendChild(egg);
+                });
+            }
+
+            createAdminEggs() {
+                const adminContainer = document.getElementById('adminEggs');
+                const adminUploads = [];
+
+                if (adminUploads.length === 0) return;
+
+                adminUploads.forEach((title, index) => {
+                    const egg = document.createElement('div');
+                    egg.className = 'df-admin-egg';
+                    egg.innerHTML = `
+                        <svg class="df-egg-svg" viewBox="0 0 120 160">
+                            <defs>
+                                <linearGradient id="eggG${index}" x1="0" x2="1">
+                                    <stop offset="0" stop-color="#2ECC71"/>
+                                    <stop offset="1" stop-color="#1A472A"/>
+                                </linearGradient>
+                            </defs>
+                            <g class="df-shell-bottom">
+                                <ellipse cx="60" cy="110" rx="46" ry="48" fill="url(#eggG${index})" stroke="#C0C0C0" stroke-width="2"/>
+                                <path d="M18 104 Q60 120 102 104" stroke="#A6FF9E" stroke-width="3" opacity=".7"/>
+                            </g>
+                            <g class="df-shell-top">
+                                <ellipse cx="60" cy="62" rx="36" ry="38" fill="url(#eggG${index})" stroke="#C0C0C0" stroke-width="2"/>
+                                <path d="M24 68 L40 56 L52 66 L68 50 L78 64" stroke="#0F1214" stroke-width="3" fill="none"/>
+                            </g>
+                        </svg>
+                        <div class="df-egg-reveal">
+                            <div class="df-video-mock">${title}</div>
+                        </div>
+                    `;
+                    
+                    egg.addEventListener('click', () => {
+                        egg.classList.toggle('df-crack');
+                    });
+                    
+                    adminContainer.appendChild(egg);
+                });
+
+                const showAdminEggs = localStorage.getItem('admin_logged_in') === 'true';
+                if (showAdminEggs) {
+                    adminContainer.style.display = 'block';
+                }
+            }
+
+            hatchEgg(eggElement, portfolioItem) {
+                if (eggElement.classList.contains('hatched')) return;
+
+                eggElement.classList.add('cracking');
+                
+                setTimeout(() => {
+                    eggElement.classList.add('hatched');
+                    eggElement.classList.remove('cracking');
+                    
+                    const videoPreview = eggElement.querySelector('.df-video-preview');
+                    videoPreview.innerHTML = '🎬';
+                    
+                }, 600);
+
+                setTimeout(() => {
+                    window.location.href = `portfolio-detail.html?id=${portfolioItem.id}`;
+                }, 1800);
+            }
+
+            breathEffect(eggElement) {
+                const rect = eggElement.getBoundingClientRect();
+                const breathContainer = document.createElement('div');
+                breathContainer.className = 'df-dragon-breath';
+                breathContainer.style.left = rect.left + rect.width / 2 + 'px';
+                breathContainer.style.top = rect.top + rect.height / 2 + 'px';
+
+                document.body.appendChild(breathContainer);
+
+                for (let i = 0; i < 6; i++) {
+                    setTimeout(() => {
+                        const particle = document.createElement('div');
+                        particle.className = 'df-breath-particle';
+                        particle.style.left = (Math.random() - 0.5) * 60 + 'px';
+                        particle.style.top = (Math.random() - 0.5) * 60 + 'px';
+                        breathContainer.appendChild(particle);
+
+                        setTimeout(() => particle.remove(), 2000);
+                    }, i * 80);
+                }
+
+                setTimeout(() => breathContainer.remove(), 2500);
+            }
+
+            setupSortingHat() {
+                const modal = document.getElementById('sortingHat');
+                const desc = document.getElementById('hatDesc');
+                const btn = document.getElementById('hatStart');
+
+                if (!localStorage.getItem('dragonfolio_house')) {
+                    modal.classList.add('active');
+                }
+
+                btn.addEventListener('click', () => {
+                    desc.textContent = 'You are... Slytherin! 🐍✨';
+                    btn.textContent = 'Enter';
+                    btn.style.background = 'linear-gradient(135deg, var(--main-green), var(--emerald))';
+                    
+                    localStorage.setItem('dragonfolio_house', 'Slytherin');
+                    
+                    setTimeout(() => {
+                        modal.classList.remove('active');
+                    }, 2000);
+                });
+
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            }
+
+            addDragonBreathEffect() {
+                setInterval(() => {
+                    if (Math.random() < 0.2) {
+                        const x = Math.random() * window.innerWidth;
+                        const y = Math.random() * window.innerHeight;
+                        
+                        const particle = document.createElement('div');
+                        particle.className = 'df-breath-particle';
+                        particle.style.position = 'fixed';
+                        particle.style.left = x + 'px';
+                        particle.style.top = y + 'px';
+                        particle.style.zIndex = '1';
+                        document.body.appendChild(particle);
+
+                        setTimeout(() => particle.remove(), 2000);
+                    }
+                }, 6000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new DragonNest();
+        });
+    </script>
+</body>
+</html>

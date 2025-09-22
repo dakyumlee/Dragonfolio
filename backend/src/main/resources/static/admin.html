@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ Admin - Dragonfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .df-login-portal {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .df-login-card {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(26, 71, 42, 0.2);
+            border: 2px solid var(--emerald);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+        .df-portal {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--lime) 0%, var(--emerald) 50%, var(--main-green) 100%);
+            margin: 1rem auto;
+            display: none;
+            animation: portalSpin 2s linear infinite;
+            box-shadow: 0 0 30px var(--emerald);
+        }
+        .df-portal.active {
+            display: block;
+        }
+        .df-admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .df-admin-card {
+            background: rgba(26, 71, 42, 0.1);
+            border: 2px solid var(--emerald);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .df-admin-card:hover {
+            background: rgba(26, 71, 42, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3);
+        }
+        .df-admin-card h3 {
+            color: var(--emerald);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .df-upload-area {
+            border: 2px dashed var(--emerald);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem 0;
+        }
+        .df-upload-area:hover {
+            background: rgba(46, 204, 113, 0.1);
+            border-color: var(--lime);
+        }
+        .df-upload-area.dragover {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: var(--lime);
+        }
+        .df-file-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+        .df-file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            background: rgba(15, 18, 20, 0.5);
+            border-radius: 8px;
+            border-left: 3px solid var(--emerald);
+        }
+        .df-file-item .file-name {
+            color: var(--silver);
+            font-size: 0.9rem;
+        }
+        .df-file-item .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .df-btn-small {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 20px;
+        }
+        .df-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .df-stat-item {
+            background: rgba(15, 18, 20, 0.5);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--main-green);
+        }
+        .df-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--emerald);
+        }
+        .df-stat-label {
+            font-size: 0.9rem;
+            color: var(--silver);
+            opacity: 0.8;
+        }
+        .df-tag-input {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+        }
+        .df-tag {
+            background: linear-gradient(135deg, var(--emerald), var(--main-green));
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .df-tag .remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        @keyframes portalSpin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        @media (max-width: 768px) {
+            .df-admin-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dragonfolio">
+        <header class="df-header">
+            <div class="df-header-inner">
+                <a class="df-brand" href="index.html">🐉 Dragonfolio</a>
+                <nav class="df-nav">
+                    <a href="index.html">Home</a>
+                    <a href="portfolio.html">Portfolio</a>
+                    <a href="guestbook.html">Guestbook</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="admin.html">Admin</a>
+                </nav>
+            </div>
+        </header>
+
+        <div id="login-screen" class="df-section">
+            <div class="df-login-portal">
+                <div class="df-login-card">
+                    <h1>🛡️ Slytherin Chamber of Secrets</h1>
+                    <p style="color: var(--silver); margin: 1rem 0;">Admin Access Only</p>
+                    
+                    <form id="admin-login" class="df-form">
+                        <div class="df-form-row">
+                            <label class="df-label">Username</label>
+                            <input class="df-input" id="admin-id" value="admin" required>
+                        </div>
+                        
+                        <div class="df-form-row">
+                            <label class="df-label">Password</label>
+                            <input class="df-input" type="password" placeholder="Slytherin's secret" required>
+                        </div>
+                        
+                        <button type="submit" class="df-btn">🌀 Open Portal</button>
+                    </form>
+
+                    <div class="df-portal" id="portal"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="admin-dashboard" style="display: none;">
+            <section class="df-section">
+                <h1>🛡️ Slytherin Admin Dashboard</h1>
+                
+                <div class="df-stats">
+                    <div class="df-stat-item">
+                        <div class="df-stat-number" id="portfolio-count">0</div>
+                        <div class="df-stat-label">Portfolio Items</div>
+                    </div>
+                    <div class="df-stat-item">
+                        <div class="df-stat-number" id="guestbook-count">0</div>
+                        <div class="df-stat-label">Guestbook Messages</div>
+                    </div>
+                    <div class="df-stat-item">
+                        <div class="df-stat-number" id="contact-count">0</div>
+                        <div class="df-stat-label">Contact Inquiries</div>
+                    </div>
+                    <div class="df-stat-item">
+                        <div class="df-stat-number" id="upload-count">0</div>
+                        <div class="df-stat-label">Uploaded Files</div>
+                    </div>
+                </div>
+
+                <div class="df-admin-grid">
+                    <div class="df-admin-card">
+                        <h3>🎬 Video Upload Management</h3>
+                        <div class="df-upload-area" id="upload-area">
+                            <p>Drag and drop MP4 files or click to upload</p>
+                            <input type="file" id="file-input" accept="video/*" multiple style="display: none;">
+                        </div>
+                        <div class="df-file-list" id="file-list"></div>
+                        <button class="df-btn df-btn-small" onclick="generatePresignedUrl()">Generate Presigned URL</button>
+                    </div>
+
+                    <div class="df-admin-card">
+                        <h3>🎨 Portfolio Management</h3>
+                        <div class="df-form-row">
+                            <label class="df-label">Title</label>
+                            <input class="df-input" id="portfolio-title" placeholder="Project title">
+                        </div>
+                        <div class="df-form-row">
+                            <label class="df-label">Description</label>
+                            <textarea class="df-input" id="portfolio-desc" rows="3" placeholder="Project description"></textarea>
+                        </div>
+                        <div class="df-form-row">
+                            <label class="df-label">Tags</label>
+                            <div class="df-tag-input">
+                                <input class="df-input" id="tag-input" placeholder="Enter tag and press Enter">
+                                <button type="button" class="df-btn df-btn-small" onclick="addTag()">Add</button>
+                            </div>
+                            <div id="tag-list"></div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="df-btn df-btn-small" onclick="savePortfolio()">Save</button>
+                            <label class="df-btn df-secondary df-btn-small">
+                                <input type="checkbox" style="margin-right: 0.5rem;">Highlight
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="df-admin-card">
+                        <h3>📖 Guestbook Management</h3>
+                        <div class="df-file-list" style="max-height: 250px;" id="guestbook-messages">
+                            <p style="text-align: center; color: var(--silver); opacity: 0.7;">No messages yet</p>
+                        </div>
+                    </div>
+
+                    <div class="df-admin-card">
+                        <h3>📧 Contact Management</h3>
+                        <div class="df-file-list" style="max-height: 250px;" id="contact-messages">
+                            <p style="text-align: center; color: var(--silver); opacity: 0.7;">No inquiries yet</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        let currentTags = [];
+
+        document.getElementById('admin-login').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('admin-id').value.toLowerCase();
+            if (username !== 'admin') {
+                alert('Access denied. Slytherin only! 🐍');
+                return;
+            }
+
+            const portal = document.getElementById('portal');
+            portal.classList.add('active');
+            
+            setTimeout(() => {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+                localStorage.setItem('admin_logged_in', 'true');
+                initAdminFeatures();
+            }, 1500);
+        });
+
+        function initAdminFeatures() {
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('file-input');
+            
+            uploadArea.addEventListener('click', () => fileInput.click());
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                handleFiles(files);
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+
+            document.getElementById('tag-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag();
+                }
+            });
+        }
+
+        function handleFiles(files) {
+            const fileList = document.getElementById('file-list');
+            
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('video/')) {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'df-file-item';
+                    fileItem.innerHTML = `
+                        <span class="file-name">🎬 ${file.name}</span>
+                        <div class="file-actions">
+                            <button class="df-btn df-btn-small" onclick="uploadToS3('${file.name}')">Upload to S3</button>
+                            <button class="df-btn df-secondary df-btn-small" onclick="removeFile(this)">Remove</button>
+                        </div>
+                    `;
+                    fileList.appendChild(fileItem);
+                }
+            });
+        }
+
+        function addTag() {
+            const tagInput = document.getElementById('tag-input');
+            const tag = tagInput.value.trim();
+            
+            if (tag && !currentTags.includes(tag)) {
+                currentTags.push(tag);
+                updateTagDisplay();
+                tagInput.value = '';
+            }
+        }
+
+        function updateTagDisplay() {
+            const tagList = document.getElementById('tag-list');
+            tagList.innerHTML = currentTags.map(tag => `
+                <span class="df-tag">
+                    ${tag}
+                    <span class="remove" onclick="removeTag('${tag}')">×</span>
+                </span>
+            `).join('');
+        }
+
+        function removeTag(tag) {
+            currentTags = currentTags.filter(t => t !== tag);
+            updateTagDisplay();
+        }
+
+        function generatePresignedUrl() {
+            alert('Generating Presigned URL...\nIn production this would connect to S3.');
+        }
+
+        function uploadToS3(filename) {
+            alert(`Starting S3 upload for ${filename}\nIn production this would upload to AWS S3.`);
+        }
+
+        function savePortfolio() {
+            const title = document.getElementById('portfolio-title').value;
+            const desc = document.getElementById('portfolio-desc').value;
+            
+            if (!title) {
+                alert('Please enter a title.');
+                return;
+            }
+            
+            alert(`Portfolio "${title}" saved\nTags: ${currentTags.join(', ')}`);
+            
+            document.getElementById('portfolio-title').value = '';
+            document.getElementById('portfolio-desc').value = '';
+            currentTags = [];
+            updateTagDisplay();
+        }
+
+        function removeFile(button) {
+            button.closest('.df-file-item').remove();
+        }
+    </script>
+</body>
+</html>

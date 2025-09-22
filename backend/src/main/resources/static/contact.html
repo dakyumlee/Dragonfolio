@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📧 Contact - Dragonfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dragonfolio">
+        <header class="df-header">
+            <div class="df-header-inner">
+                <a class="df-brand" href="index.html">🐉 Dragonfolio</a>
+                <nav class="df-nav">
+                    <a href="index.html">Home</a>
+                    <a href="portfolio.html">Portfolio</a>
+                    <a href="guestbook.html">Guestbook</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="admin.html">Admin</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="df-section">
+            <h1>📧 Let's Create Together</h1>
+            
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div style="background: rgba(26,71,42,.2); border: 1px solid var(--emerald); border-radius: 16px; padding: 32px;">
+                    <h3 style="color: var(--emerald); margin-bottom: 20px;">🐉 Project Inquiry</h3>
+                    
+                    <form style="display: flex; flex-direction: column; gap: 16px;">
+                        <div class="df-form-row">
+                            <label style="color: var(--lime); font-weight: 700;">Name</label>
+                            <input class="df-input" placeholder="Tell me your name" required>
+                        </div>
+                        
+                        <div class="df-form-row">
+                            <label style="color: var(--lime); font-weight: 700;">Email</label>
+                            <input class="df-input" type="email" placeholder="dragon@example.com" required>
+                        </div>
+                        
+                        <div class="df-form-row">
+                            <label style="color: var(--lime); font-weight: 700;">Project Type</label>
+                            <select class="df-input" required>
+                                <option value="">Please select</option>
+                                <option value="3d">3D Modeling</option>
+                                <option value="animation">Animation</option>
+                                <option value="vfx">VFX & Visual Effects</option>
+                                <option value="game">Game Assets</option>
+                            </select>
+                        </div>
+                        
+                        <div class="df-form-row">
+                            <label style="color: var(--lime); font-weight: 700;">Details</label>
+                            <textarea class="df-input" rows="4" placeholder="What magic shall we create together?" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="df-btn" style="margin-top: 12px;">🚀 Begin the Magical Journey</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Message sent! A reply will soon fly to you on dragon wings.');
+        });
+    </script>
+</body>
+</html>

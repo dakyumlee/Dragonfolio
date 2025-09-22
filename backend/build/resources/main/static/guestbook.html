@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 Guestbook - Dragonfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .df-guestbook-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .df-form-container {
+            background: rgba(26, 71, 42, 0.2);
+            border: 2px solid var(--emerald);
+            border-radius: 16px;
+            padding: 2rem;
+            height: fit-content;
+        }
+
+        .df-form-container h3 {
+            color: var(--emerald);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            font-family: 'Cinzel Decorative', serif;
+        }
+
+        .df-book-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .df-book-pages {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .df-book-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--main-green), var(--emerald));
+            transform: translateX(-50%);
+            z-index: 10;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+        }
+
+        .df-page {
+            background: rgba(26, 71, 42, 0.15);
+            border: 2px solid var(--emerald);
+            border-radius: 15px;
+            padding: 1.5rem;
+            min-height: 400px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .df-page:hover {
+            background: rgba(26, 71, 42, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(46, 204, 113, 0.2);
+        }
+
+        .df-page h3 {
+            color: var(--lime);
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--emerald);
+        }
+
+        .df-entry {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: rgba(46, 204, 113, 0.08);
+            border-left: 3px solid var(--emerald);
+            border-radius: 0 10px 10px 0;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .df-entry:hover {
+            background: rgba(46, 204, 113, 0.15);
+            transform: translateX(5px);
+        }
+
+        .df-entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .df-entry-author {
+            font-weight: 600;
+            color: var(--emerald);
+            font-size: 0.85rem;
+        }
+
+        .df-entry-date {
+            font-size: 0.7rem;
+            color: var(--silver);
+            opacity: 0.7;
+        }
+
+        .df-entry-text {
+            color: var(--silver);
+            line-height: 1.4;
+        }
+
+        .df-book-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .df-page-info {
+            color: var(--silver);
+            font-size: 1rem;
+            font-weight: 500;
+            background: rgba(26, 71, 42, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--emerald);
+        }
+
+        .df-char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--silver);
+            margin-top: 0.5rem;
+        }
+
+        .df-success-message {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(46, 204, 113, 0.1);
+            border: 2px solid var(--emerald);
+            border-radius: 10px;
+            color: var(--lime);
+            text-align: center;
+        }
+
+        .df-form-container {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            background: rgba(26, 71, 42, 0.2);
+            border: 2px solid var(--emerald);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .df-form-container h3 {
+            color: var(--emerald);
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+        }
+
+        .df-char-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--silver);
+            margin-top: 0.5rem;
+        }
+
+        .df-success-message {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(46, 204, 113, 0.1);
+            border: 2px solid var(--emerald);
+            border-radius: 10px;
+            color: var(--lime);
+            text-align: center;
+        }
+
+        .df-book:hover .df-spine::after {
+            content: '✨';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: sparkle 2s infinite;
+            font-size: 1.2rem;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pageFlutter {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(5deg); }
+        }
+
+        .df-page:hover {
+            animation: pageFlutter 1s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            .df-page {
+                width: 100%;
+                margin: 0 0 2rem 0;
+                min-height: 300px;
+            }
+
+            .df-page.df-left,
+            .df-page.df-right {
+                float: none;
+            }
+
+            .df-spine,
+            .df-sheet {
+                display: none;
+            }
+
+            .df-book-controls {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dragonfolio">
+        <header class="df-header">
+            <div class="df-header-inner">
+                <a class="df-brand" href="index.html">🐉 Dragonfolio</a>
+                <nav class="df-nav">
+                    <a href="index.html">Home</a>
+                    <a href="portfolio.html">Portfolio</a>
+                    <a href="guestbook.html">Guestbook</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="admin.html">Admin</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="df-section">
+            <h1>📖 Magic Book Guestbook</h1>
+            
+            <!-- Message Form -->
+            <div class="df-form-container">
+                <h3>✍️ Leave a Magical Message</h3>
+                
+                <form id="guestbook-form" class="df-form">
+                    <div class="df-form-row">
+                        <label class="df-label">Name</label>
+                        <input class="df-input" id="guest-name" placeholder="Anonymous Wizard" required>
+                    </div>
+                    
+                    <div class="df-form-row">
+                        <label class="df-label">Message</label>
+                        <textarea class="df-input" id="guest-message" rows="3" placeholder="Leave a magical message..." required maxlength="200"></textarea>
+                        <div class="df-char-count">
+                            <span id="char-count">0</span>/200
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="df-btn">📝 Write in Magic Book</button>
+                </form>
+
+                <div id="success-message" class="df-success-message">
+                    🎉 Your message has been written in the magic book! It will appear in the pages soon.
+                </div>
+            </div>
+            
+            <!-- Magic Book -->
+            <p style="text-align:center; color:var(--silver); margin-bottom:3rem;">
+                Read magical messages from visitors with 3D page turning ✨
+            </p>
+            
+            <div class="df-book">
+                <div class="df-spine"></div>
+                <div class="df-page df-left">
+                    <h3>Left Page</h3>
+                    <div id="left-content"></div>
+                </div>
+                <div class="df-page df-right">
+                    <h3>Right Page</h3>
+                    <div id="right-content"></div>
+                </div>
+                <div class="df-sheet" id="magic-sheet"></div>
+                <div class="df-book-controls">
+                    <button class="df-btn df-secondary" id="prev-page">⟵ Previous</button>
+                    <button class="df-btn" id="next-page">Next ⟶</button>
+                    <span style="color: var(--silver); font-size: 14px; margin-left: 16px;" id="page-info"></span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let entries = [];
+
+        let currentPage = 0;
+        const entriesPerSide = 2;
+
+        function getTotalPages() {
+            if (entries.length === 0) return 1;
+            return Math.ceil(entries.length / (entriesPerSide * 2));
+        }
+
+        function renderPage() {
+            if (entries.length === 0) {
+                document.getElementById('left-content').innerHTML = `
+                    <div style="text-align: center; color: var(--silver); opacity: 0.7; margin-top: 2rem;">
+                        <p>No messages yet.</p>
+                        <p>Be the first to leave a magical message!</p>
+                    </div>
+                `;
+                document.getElementById('right-content').innerHTML = '';
+                document.getElementById('page-info').textContent = '1 / 1';
+                
+                document.getElementById('prev-page').disabled = true;
+                document.getElementById('next-page').disabled = true;
+                return;
+            }
+
+            const start = currentPage * 4;
+            const leftEntries = entries.slice(start, start + entriesPerSide);
+            const rightEntries = entries.slice(start + entriesPerSide, start + entriesPerSide * 2);
+
+            document.getElementById('left-content').innerHTML = leftEntries.map(entry => 
+                `<div class="df-entry">
+                    <div class="df-entry-header">
+                        <span class="df-entry-author">${entry.author}</span>
+                        <span class="df-entry-date">${entry.date}</span>
+                    </div>
+                    <div class="df-entry-text">${entry.text}</div>
+                </div>`
+            ).join('');
+
+            document.getElementById('right-content').innerHTML = rightEntries.map(entry => 
+                `<div class="df-entry">
+                    <div class="df-entry-header">
+                        <span class="df-entry-author">${entry.author}</span>
+                        <span class="df-entry-date">${entry.date}</span>
+                    </div>
+                    <div class="df-entry-text">${entry.text}</div>
+                </div>`
+            ).join('');
+
+            const totalPages = getTotalPages();
+            document.getElementById('page-info').textContent = `${currentPage + 1} / ${totalPages}`;
+            
+            document.getElementById('prev-page').disabled = currentPage === 0;
+            document.getElementById('next-page').disabled = currentPage >= totalPages - 1;
+        }
+
+        function flipPage(direction) {
+            const sheet = document.getElementById('magic-sheet');
+            const book = document.querySelector('.df-book');
+            
+            const sparkles = ['✨', '🌟', '⭐', '💫'];
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+                    sparkle.style.cssText = `
+                        position: absolute;
+                        top: ${Math.random() * 100}%;
+                        left: ${Math.random() * 100}%;
+                        font-size: 1.5rem;
+                        pointer-events: none;
+                        z-index: 20;
+                        animation: sparkle 1.5s ease-out forwards;
+                    `;
+                    book.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 1500);
+                }, i * 100);
+            }
+
+            sheet.classList.remove('df-flip');
+            void sheet.offsetWidth;
+            sheet.classList.add('df-flip');
+            
+            setTimeout(renderPage, 400);
+        }
+
+        document.getElementById('next-page').addEventListener('click', function() {
+            if ((currentPage + 1) * 4 >= entries.length) return;
+            currentPage++;
+            flipPage('next');
+        });
+
+        document.getElementById('prev-page').addEventListener('click', function() {
+            if (currentPage === 0) return;
+            currentPage--;
+            flipPage('prev');
+        });
+
+        // Character count
+        document.getElementById('guest-message').addEventListener('input', function() {
+            const length = this.value.length;
+            document.getElementById('char-count').textContent = length;
+            
+            if (length > 180) {
+                document.getElementById('char-count').style.color = 'var(--emerald)';
+            } else {
+                document.getElementById('char-count').style.color = 'var(--silver)';
+            }
+        });
+
+        // Message form submission
+        document.getElementById('guestbook-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('guest-name').value.trim() || 'Anonymous Wizard';
+            const message = document.getElementById('guest-message').value.trim();
+            
+            if (!message) return;
+
+            const today = new Date().toISOString().split('T')[0];
+            entries.unshift({
+                author: name,
+                text: message,
+                date: today
+            });
+
+            // Reset form
+            document.getElementById('guestbook-form').reset();
+            document.getElementById('char-count').textContent = '0';
+            document.getElementById('char-count').style.color = 'var(--silver)';
+
+            // Show success message
+            const successMsg = document.getElementById('success-message');
+            successMsg.style.display = 'block';
+            successMsg.style.animation = 'sparkle 0.5s ease-in-out';
+            
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+
+            // Go to first page and render
+            currentPage = 0;
+            renderPage();
+
+            // Smooth scroll to magic book
+            document.querySelector('.df-book').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+
+            // Magic book glow effect
+            const book = document.querySelector('.df-book');
+            book.style.filter = 'drop-shadow(0 0 20px rgba(46, 204, 113, 0.8))';
+            setTimeout(() => {
+                book.style.filter = '';
+            }, 2000);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' && currentPage > 0) {
+                document.getElementById('prev-page').click();
+            } else if (e.key === 'ArrowRight' && currentPage < getTotalPages() - 1) {
+                document.getElementById('next-page').click();
+            }
+        });
+
+        // Initial render
+        renderPage();
+
+        // Page load magic effect
+        window.addEventListener('load', function() {
+            const book = document.querySelector('.df-book');
+            book.style.opacity = '0';
+            book.style.transform = 'translateY(50px)';
+            book.style.transition = 'all 1s ease-out';
+            
+            setTimeout(() => {
+                book.style.opacity = '1';
+                book.style.transform = 'translateY(0)';
+            }, 500);
+        });
